@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.Buffer;
+import java.sql.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +14,8 @@ public class Generator {
 
     static int MAX_LUGGAGE = 5;
     static int MAX_PASSENGERS = 200;
-    static int MAX_FLIGHTS = 10;
+    static int MAX_FLIGHTS = 300;
+    static int MAX_AIRPORTS = 20;
 
     static void generatePassengers() throws IOException {
         //Creates arraylist of first names
@@ -34,7 +36,7 @@ public class Generator {
         int counter = 0;
         brairport.readLine();
         brairport.readLine();
-        while (counter < 25) {
+        while (counter < MAX_AIRPORTS) {
             counter ++;
             line = brairport.readLine();
             airportArray.add(line);
@@ -74,7 +76,7 @@ public class Generator {
                 double lug_hi = Double.valueOf(lug_split[2]);
                 String lug_weight = df.format(lug_low + (lug_hi - lug_low) * rand.nextDouble());
                 pass_line += lug_split[0] + ",";
-                pass_line += lug_weight;
+                pass_line += String.valueOf(lug_weight) + ",";
             }
             pass_line += "\n";
             sortedPass.add(pass_line);
@@ -89,14 +91,6 @@ public class Generator {
         writer.close();
     }
 
-    static void sortPassengers() throws IOException {
-        File passengers = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Passengers.csv");
-        BufferedReader brPass = new BufferedReader(new FileReader(passengers));
-        String line = "";
-        while ((line = brPass.readLine()) != null) {
-
-        }
-    }
     static void generateFlights() throws IOException {
 
         //creates an arraylist of an airport
@@ -109,14 +103,14 @@ public class Generator {
         br_airport.readLine();
         br_airport.readLine();
         int counter = 0;
-        while (counter < 25) {
+        while (counter < MAX_AIRPORTS) {
             counter ++;
             airportArray.add(br_airport.readLine());
         }
 
         //Writes to a csv which contains a airport id, a start location, an end location
         //and a distance between the two
-        int flight_id = 0;
+        ArrayList<String> sortedFlights = new ArrayList<>();
         BufferedWriter writer = new BufferedWriter((new FileWriter("/Users/mattbraly/Documents/Summer/Airline/src/Records/Flights.csv")));
         Random rand = new Random();
         String flight_uuid = "";
@@ -125,7 +119,7 @@ public class Generator {
             String[] airport_split1 = airportArray.get(rand.nextInt(airportArray.size())).split(",");
             String[] airport_split2 = airportArray.get(rand.nextInt(airportArray.size())).split(",");
 
-            String flight_line = flight_uuid + "," + airport_split1[1] + "," + airport_split2[1] + ",";
+            String flight_line = airport_split1[1] + "," + airport_split2[1] + "," + flight_uuid + ",";
             double lat1 = Double.parseDouble(airport_split1[4]);
             double lon1 = Double.parseDouble(airport_split1[5]);
             double lat2 = Double.parseDouble(airport_split2[4]);
@@ -133,15 +127,18 @@ public class Generator {
 
             double distance = calculateDistance(lat1, lat2, lon1, lon2);
 
-            flight_line += String.valueOf(distance);
+            flight_line += String.valueOf(distance) + ",";
             int hour = rand.nextInt(25) * 100;
             int min = rand.nextInt(60);
             int time = hour + min;
 
             flight_line += df.format(time) +  "\n";
-            writer.write(flight_line);
+            sortedFlights.add(flight_line);
         }
-
+        Collections.sort(sortedFlights);
+        for (int i = 0; i < sortedFlights.size(); i ++) {
+            writer.write(sortedFlights.get(i));
+        }
         writer.close();
 
 
@@ -161,9 +158,4 @@ public class Generator {
         return d;
     }
 
-    public static void main(String[] args) throws IOException {
-
-        generatePassengers();
-        generateFlights();
-    }
 }

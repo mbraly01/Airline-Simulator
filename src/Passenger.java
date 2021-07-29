@@ -3,27 +3,17 @@ import java.util.UUID;
 
 public class Passenger {
 
-    private String id;
     private String first;
-    private String last;
+    private String uuid;
     private String start;
     private String end;
-    private String finalDestination;
 
-    public Passenger(String first, String last, String finalDestination){
+    public Passenger(String start, String end, String first, String uuid) {
         this.first = first;
-        this.last = last;
-        this.finalDestination = finalDestination;
-        UUID id = UUID.randomUUID();
+        this.uuid = uuid;
+        this.start = start;
+        this.end = end;
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getFirst() {
@@ -34,19 +24,27 @@ public class Passenger {
         this.first = first;
     }
 
-    public String getLast() {
-        return last;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setLast(String last) {
-        this.last = last;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    public String getFinalDestination() {
-        return finalDestination;
+    public String getStart() {
+        return start;
     }
 
-    public void setFinalDestination(String finalDestination) {
-        this.finalDestination = finalDestination;
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
     }
 }

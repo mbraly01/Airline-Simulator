@@ -3,24 +3,19 @@ public class Flight {
     private String uuid;
     private String start;
     private String end;
-    private int totalSeats;
-    private int seatsFilled;
     private double distance;
-    private String model;
-    private double totalWeight;
+    private int time;
+    private Plane plane;
 
 
-    public Flight(String uuid, String start, String end, double distance,
-                  String model, int totalSeats, double totalWeight)
+    public Flight( String start, String end, String uuid, double distance, String time)
     {
         this.uuid = uuid;
         this.start= start;
         this.end = end;
-        this.totalSeats = totalSeats;
-        this.seatsFilled = 0;
         this.distance = distance;
-        this.model = model;
-        this.totalWeight = totalWeight;
+        this.plane = new Plane("A1", 5, 50);
+        this.time = Integer.parseInt(time);
     }
 
     public String getUUID() { return uuid; }
@@ -43,38 +38,44 @@ public class Flight {
         this.end = end;
     }
 
-    public int getTotalSeats() {
-        return totalSeats;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setTotalSeats(int totalSeats) {
-        this.totalSeats = totalSeats;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    public int getSeatsFilled() {
-        return seatsFilled;
+    public double getDistance() {
+        return distance;
     }
 
-    public void setSeatsFilled(int seatsFilled) {
-        this.seatsFilled = seatsFilled;
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
-    public boolean addPassenger() {
-        if (totalSeats == seatsFilled) {
-            return false;
-        }
-        else {
-            seatsFilled ++;
-            return true;
-        }
+    public int getTime() {
+        return time;
     }
 
-    public String getModel() {
-        return model;
+    public void setTime(int time) {
+        this.time = time;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public Plane getPlane() {
+        return plane;
+    }
+
+    public void setPlane(Plane plane) {
+        this.plane = plane;
+    }
+
+    public boolean addPass(Passenger pass) {
+        return plane.fill(pass);
+    }
+
+    public boolean addWeight(double lug) {
+        return plane.addWeight(lug);
     }
 
 

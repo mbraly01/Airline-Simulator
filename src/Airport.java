@@ -7,8 +7,9 @@ public class Airport {
 
     private ArrayList<Flight> flightsIn;
     private ArrayList<Flight> flightsOut;
-    private HashMap<String, Integer> planes;
+    private HashMap<Plane, Integer> planes;
     private String name;
+
 
     public Airport(String name) {
         this.name = name;
@@ -22,6 +23,10 @@ public class Airport {
         this.flightsIn = flightsIn;
     }
 
+    public void addFlightsIn(Flight flightIn) {
+        this.flightsOut.add(flightIn);
+    }
+
     public ArrayList<Flight> getFlightsOut() {
         return this.flightsOut;
     }
@@ -30,7 +35,11 @@ public class Airport {
         this.flightsOut = flightsOut;
     }
 
-    public HashMap<String, Integer> getPlanes() {
+    public void addFlightsOut(Flight flightOut) {
+        this.flightsOut.add(flightOut);
+    }
+
+    public HashMap<Plane, Integer> getPlanes() {
         return this.planes;
     }
 
@@ -38,11 +47,15 @@ public class Airport {
         this.planes = planes;
     }
 
-    public void addPlane(String plane) {
+    public void addPlane(Plane plane) {
         planes.put(plane, planes.get(plane) + 1);
     }
 
-    public boolean removePlane(String plane) {
+    public void addPlane(Plane plane, int num) {
+        planes.put(plane, num);
+    }
+
+    public boolean removePlane(Plane plane) {
         if (planes.get(plane) != 0) {
             planes.put(plane, planes.get(plane) - 1);
             return true;
