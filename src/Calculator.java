@@ -12,54 +12,6 @@ public class Calculator {
 
     public static int MAX_PLANES = 100;
 
-    //Assigns Flights to airports
-//    public HashMap assignFlights() throws IOException {
-//        HashMap<String, Airport> flightHash = new HashMap<>();
-//        File flightsFile = new File(" /Users/mattbraly/Documents/Summer/Airline/src/Records/Flights.csv");
-//        BufferedReader brFlights = new BufferedReader(new FileReader(flightsFile));
-//        String line = "";
-//        while ((line = brFlights.readLine()) != null) {
-//            String[] flightSplit = line.split(",");
-//            Flight tempFlight = new Flight(flightSplit[0],
-//                    flightSplit[1], flightSplit[2],
-//                    Double.parseDouble(flightSplit[3]),
-//                    null,flightSplit[4]);
-//            String key = flightSplit[1];
-//            if (flightHash.get(key) == null) {
-//                Airport tempAirport = new Airport(key);
-//                tempAirport.addFlightsOut(tempFlight);
-//                flightHash.put(key,tempAirport);
-//                if (flightHash.get(flightSplit[2]) == null) {
-//                    Airport tempAirport2 = new Airport(key);
-//                    tempAirport2.addFlightsIn(tempFlight);
-//                    flightHash.put(flightSplit[2], tempAirport2);
-//                }
-//                else {
-//                    Airport tempAirport2 = flightHash.get(flightSplit[2]);
-//                    tempAirport2.addFlightsIn(tempFlight);
-//                    flightHash.put(flightSplit[2], tempAirport2);
-//                }
-//            }
-//            else {
-//                Airport tempAirport = flightHash.get(key);
-//                tempAirport.addFlightsOut(tempFlight);
-//                flightHash.put(key, tempAirport);
-//                if (flightHash.get(flightSplit[2]) == null) {
-//                    Airport tempAirport2 = new Airport(key);
-//                    tempAirport2.addFlightsIn(tempFlight);
-//                    flightHash.put(flightSplit[2], tempAirport2);
-//                }
-//                else {
-//                    Airport tempAirport2 = flightHash.get(flightSplit[2]);
-//                    tempAirport2.addFlightsIn(tempFlight);
-//                    flightHash.put(flightSplit[2], tempAirport2);
-//                }
-//            }
-//        }
-//
-//        return flightHash;
-//    }
-
     //Assigns planes to airports
     public HashMap assignPlanes(HashMap<String, Airport> flightHash) throws IOException {
         Random rand = new Random();
@@ -85,42 +37,6 @@ public class Calculator {
 
         return flightHash;
     }
-
-//    public HashMap countPass(HashMap<String, Airport> flightHash) throws IOException {
-//        //Gets all the flights out of the hash
-//        String[] keys = flightHash.keySet().toArray(new String[0]);
-//        HashMap<Flight, Integer> planeHash = new HashMap<>();
-//        for (int i = 0; i < keys.length; i ++) {
-//            Airport tempAirport = flightHash.get(keys[i]);
-//            ArrayList<Flight> flightList = tempAirport.getFlightsOut();
-//            for (int j = 0; j < flightList.size(); j ++) {
-//                planeHash.put(flightList.get(j), 0);
-//            }
-//        }
-//
-//        File file = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Passengers.csv");
-//        BufferedReader brPass = new BufferedReader(new FileReader(file));
-//        String line = "";
-//        HashMap<String, Flight> flightKeys = new HashMap<>();
-//        for (Flight tempFlight : planeHash.keySet()) {
-//            String combo = tempFlight.getStart() + "," + tempFlight.getEnd();
-//            while (flightKeys.get(combo) != null) {
-//                combo += "0";
-//            }
-//            flightKeys.put(combo, tempFlight);
-//        }
-//
-//        File leftOvers = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Leftovers.csv");
-//        while ((line = brPass.readLine()) != null) {
-//            String[] passSplit = line.split(",");
-//            String combo = passSplit[0] + "," + passSplit[1];
-//            Passenger tempPass = new Passenger(passSplit[2],
-//                    passSplit[3],)
-//
-//        }
-//
-//        return null;
-//    }
 
      static HashMap AssignFlights() throws IOException {
         //Opening up files
