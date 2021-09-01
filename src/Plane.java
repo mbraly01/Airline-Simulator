@@ -1,11 +1,13 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Plane {
 
     private String model;
     private int seats;
     private int weight;
-    private ArrayList<Passenger> filled;
+    private int passCount;
+    private Queue<Passenger> passengers;
     private double totalWeight;
 
     public Plane(String model, int seats, int weight) {
@@ -13,7 +15,7 @@ public class Plane {
         this.seats = seats;
         this.weight = weight;
         this.totalWeight = 0;
-        filled = new ArrayList<>();
+        passengers = new LinkedList<Passenger>();
     }
 
     public String getModel() {
@@ -41,11 +43,16 @@ public class Plane {
     }
 
     public boolean fill(Passenger pass) {
-        if (this.filled.size() == this.seats) return false;
+        if (this.passCount == this.seats) return false;
         else {
-            this.filled.add(pass);
+            this.passengers.add(pass);
+            this.passCount ++;
             return true;
         }
+    }
+
+    public Passenger removePass() {
+        return this.passengers.remove();
     }
 
     public boolean addWeight(double lug) {

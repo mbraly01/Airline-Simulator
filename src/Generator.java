@@ -111,15 +111,15 @@ public class Generator {
         //Writes to a csv which contains a airport id, a start location, an end location
         //and a distance between the two
         ArrayList<String> sortedFlights = new ArrayList<>();
-        BufferedWriter writer = new BufferedWriter((new FileWriter("/Users/mattbraly/Documents/Summer/Airline/src/Records/Flights.csv")));
+        ArrayList<String> sortedArrivals = new ArrayList<>();
         Random rand = new Random();
         String flight_uuid = "";
         for (int i = 0; i < MAX_FLIGHTS; i ++) {
-            flight_uuid = randomUUID().toString();
             String[] airport_split1 = airportArray.get(rand.nextInt(airportArray.size())).split(",");
             String[] airport_split2 = airportArray.get(rand.nextInt(airportArray.size())).split(",");
 
-            String flight_line = airport_split1[1] + "," + airport_split2[1] + "," + flight_uuid + ",";
+            String flight_line = airport_split1[1] + "," + airport_split2[1] + ",";
+            String flight_out = airport_split2[1] + "," + airport_split1[1] + ",";
             double lat1 = Double.parseDouble(airport_split1[4]);
             double lon1 = Double.parseDouble(airport_split1[5]);
             double lat2 = Double.parseDouble(airport_split2[4]);
@@ -128,20 +128,39 @@ public class Generator {
             double distance = calculateDistance(lat1, lat2, lon1, lon2);
 
             flight_line += String.valueOf(distance) + ",";
+            flight_out += String.valueOf(distance) + ",";
             int hour = rand.nextInt(25) * 100;
             int min = rand.nextInt(60);
             int time = hour + min;
 
-            flight_line += df.format(time) +  "\n";
+            flight_line += df.format(time) +  ",";
+            flight_out += df.format(time) + ",";
             sortedFlights.add(flight_line);
+            sortedArrivals.add(flight_out);
         }
         Collections.sort(sortedFlights);
-        for (int i = 0; i < sortedFlights.size(); i ++) {
-            writer.write(sortedFlights.get(i));
+        Collections.sort(sortedArrivals);
+
+        BufferedWriter dep = new BufferedWriter((new FileWriter("/Users/mattbraly/Documents/Summer/Airline/src/Records/Departures.csv")));
+        BufferedWriter arr = new BufferedWriter((new FileWriter("/Users/mattbraly/Documents/Summer/Airline/src/Records/Arrivals.csv")));
+        flight_uuid = randomUUID().toString();
+        String compDep = sortedFlights.get(0);
+        String compArr = sortedArrivals.get(0);
+        dep.write(compDep + flight_uuid + "\n");
+        arr.write(compArr + flight_uuid + "\n");
+        for (int i = 1; i < sortedFlights.size(); i ++) {
+            flight_uuid = randomUUID().toString();
+            if (compDep != sortedFlights.get(i)) {
+               dep.write(sortedFlights.get(i) + flight_uuid + "\n");
+               compDep = sortedFlights.get(i);
+            }
+            if (compArr != sortedArrivals.get(i)) {
+                arr.write(sortedArrivals.get(i) + flight_uuid + "\n");
+                compArr = sortedArrivals.get(i);
+            }
         }
-        writer.close();
-
-
+        dep.close();
+        arr.close();
     }
 
     static double calculateDistance(double lat1, double lat2, double lon1, double lon2) {

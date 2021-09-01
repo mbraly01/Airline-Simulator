@@ -7,12 +7,14 @@ public class Passenger {
     private String uuid;
     private String start;
     private String end;
+    private ArrayList<Luggage> luggage;
 
     public Passenger(String start, String end, String first, String uuid) {
         this.first = first;
         this.uuid = uuid;
         this.start = start;
         this.end = end;
+        this.luggage = new ArrayList<>();
 
     }
 
@@ -27,6 +29,8 @@ public class Passenger {
     public String getUuid() {
         return uuid;
     }
+
+    public ArrayList<Luggage> getLuggage() { return luggage; }
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
@@ -46,5 +50,13 @@ public class Passenger {
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    public void addLuggage(Luggage toAdd) {
+        this.luggage.add(toAdd);
+    }
+
+    public void removeLuggage(int i) {
+        this.luggage.remove(i);
     }
 }

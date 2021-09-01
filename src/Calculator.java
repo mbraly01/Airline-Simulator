@@ -12,15 +12,57 @@ public class Calculator {
 
     public static int MAX_PLANES = 100;
 
+    public HashMap assignAirports() throws IOException {
+        File airports = new File("/Users/mattbraly/Documents/Summer/Airline/src/Seeds/us-airports.csv");
+        BufferedReader br_airport = new BufferedReader(new FileReader(airports));
+        HashMap<String, Airport> airportHash = new HashMap<>();
+        String line = "";
+        while ((line = br_airport.readLine()) != null) {
+            String[] splitLine = line.split(",");
+            if (splitLine[1].charAt(0) == 'K') {
+                Airport temp = new Airport(splitLine[1]);
+                airportHash.put(splitLine[1], temp);
+            }
+        }
+
+        return airportHash;
+
+    }
+
+    public HashMap assignPassengers(HashMap<String, Airport> airportHash, ArrayList<Flight> flights) throws IOException {
+        File passFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Passengers.csv");
+        BufferedReader brPassFile = new BufferedReader(new FileReader(passFile));
+        String line = "";
+        String prevAirport = "";
+        Airport tempAirport = new Airport();
+        while ((line = brPassFile.readLine()) != null) {
+            String[] lineSplit = line.split(",");
+            Passenger tempPass = new Passenger(lineSplit[0], lineSplit[1], lineSplit[2], lineSplit[3]);
+            if (!lineSplit[0].equals(prevAirport)) {
+                airportHash.put(tempAirport.getName(), tempAirport);
+                tempAirport = airportHash.get(lineSplit[0]);
+                prevAirport = lineSplit[0];
+            }
+            int i = 4;
+            while (i < lineSplit.length) {
+                Luggage temp = new Luggage(lineSplit[3], lineSplit[i], Float.valueOf(lineSplit[i + 1]));
+                i += 2;
+                tempPass.addLuggage(temp);
+            }
+            tempAirport.addPassenger(tempPass);
+        }
+        return airportHash;
+    }
+
     //Assigns planes to airports
-    public HashMap assignPlanes(HashMap<String, Airport> flightHash) throws IOException {
+    public HashMap assignPlanes(HashMap<String, Airport> airportHash) throws IOException {
         Random rand = new Random();
-        String[] keys = flightHash.keySet().toArray(new String[0]);
+        String[] keys = airportHash.keySet().toArray(new String[0]);
         int total_planes = MAX_PLANES;
-        for (int i = 0; i < keys.length; i ++) {
+        for (int i = 0; i < keys.length; i++) {
             File file = new File("/Users/mattbraly/Documents/Summer/Airline/src/Seeds/Models.csv");
             BufferedReader brPlanes = new BufferedReader(new FileReader(file));
-            Airport tempAirport = flightHash.get(keys[i]);
+            Airport tempAirport = airportHash.get(keys[i]);
             String line = "";
             while ((line = brPlanes.readLine()) != null) {
                 String[] plane_split = line.split(",");
@@ -32,102 +74,51 @@ public class Calculator {
                 tempAirport.addPlane(tempPlane, planes);
             }
 
-            flightHash.put(keys[i], tempAirport);
+            airportHash.put(keys[i], tempAirport);
         }
 
-        return flightHash;
+        return airportHash;
     }
 
-     static HashMap AssignFlights() throws IOException {
+    static HashMap assignArrivals(HashMap<String, Airport> airportHash) throws IOException {
         //Opening up files
-        File flightsFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Flights.csv");
-        File passFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Passengers.csv");
-        File leftFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Leftovers.csv");
-         File boardedFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Boarded.csv");
-        BufferedReader brFlights = new BufferedReader(new FileReader(flightsFile));
-        BufferedReader brPassFile = new BufferedReader(new FileReader(passFile));
-        BufferedWriter bwLeft = new BufferedWriter(new FileWriter(leftFile));
-        BufferedWriter bwBoarded = new BufferedWriter(new FileWriter(boardedFile));
-        DecimalFormat df = new DecimalFormat("0000");
-
-        HashMap<String, Flight> flightsHash = new HashMap<>();
-        //Starting loop by reading the first line from passenger list
-        String passForLeft = brPassFile.readLine();
-        String[] passSplit = passForLeft.split(",");
-        double tempWeight = 0;
+        File flightsFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Arrivals.csv");
+        BufferedReader brArrivals = new BufferedReader(new FileReader(flightsFile));
         String line = "";
-        //loops through flight in sorted order
-        while ((line = brFlights.readLine()) != null) {
-            //creates a new flight
-            String[] flightSplit = line.split(",");
-            Flight tempFlight = new Flight(flightSplit[0], flightSplit[1],
-                flightSplit[2], Double.parseDouble(flightSplit[3]),
-                    flightSplit[4]);
-            //creates hashmap key of start location, landing location, and time
-            String key = tempFlight.getStart() + "," + tempFlight.getEnd()
-                    + "," + df.format(tempFlight.getTime());
-            if (flightsHash.get(key) == null) {
-                //Looks alphabetically at the start location and compares to passenger start
-                while (tempFlight.getStart().compareTo(passSplit[0]) > 0) {
-                    //writes all passengers that start at an airport which is
-                    //alphabetically before the current flight's start location
-                    //and adds them to leftover list
-                    bwLeft.write(passForLeft + "\n");
-                    passForLeft = brPassFile.readLine();
-                    if (passForLeft== null) {
-                        break;
-                    }
-                    else {
-                        passSplit = passForLeft.split(",");
-                    }
-                }
-                //writes all passengers that start at an airport which is
-                //alphabetically before the current flight's end location
-                //and adds them to leftover list
-                while (tempFlight.getEnd().compareTo(passSplit[1]) > 0) {
-                    bwLeft.write(passForLeft + "\n");
-                    passForLeft = brPassFile.readLine();
-                    if (passForLeft== null) {
-                        break;
-                    }
-                    else {
-                        passSplit = passForLeft.split(",");
-                    }
-                }
-                int countDebug = 0;
-                //writes all passengers who are on the same flight to the flight roster
-                while (tempFlight.getStart().equals(passSplit[0]) && tempFlight.getEnd().equals(passSplit[1])) {
-                    Passenger tempPass = new Passenger(passSplit[0], passSplit[1], passSplit[2], passSplit[3]);
-                    //checks to see if there is room on the flight
-                    boolean isAdded = tempFlight.addPass(tempPass);
-                    bwBoarded.write(passForLeft + "\n");
-                    if (isAdded == false) {
-                        bwLeft.write(passForLeft + "\n");
-                        break;
-                    } else {
-                        int counter = 5;
-                        while (counter < passSplit.length) {
-                            tempWeight += Double.parseDouble(passSplit[counter]);
-                            counter++;
-                            counter++;
-                        }
-                        tempFlight.addWeight(tempWeight);
-                        tempWeight = 0;
-                        passForLeft = brPassFile.readLine();
-                        if (passForLeft == null) {
-                            break;
-                        } else {
-                            passSplit = passForLeft.split(",");
-                        }
-                    }
-                }
-                flightsHash.put(key, tempFlight);
+        String prevAirport = "";
+        Airport tempAirport = new Airport();
+        while ((line = brArrivals.readLine()) != null) {
+            String[] lineSplit = line.split(",");
+            Flight tempFlight = new Flight(lineSplit[0], lineSplit[1], lineSplit[4], Double.valueOf(lineSplit[2]), lineSplit[3]);
+            if (!lineSplit[0].equals(prevAirport)) {
+                airportHash.put(tempAirport.getName(), tempAirport);
+                tempAirport = airportHash.get(lineSplit[0]);
+                prevAirport = lineSplit[0];
             }
-
+            tempAirport.addArrivals(tempFlight);
         }
-        //closes both writers and returns hash table
-        bwLeft.close();
-        bwBoarded.close();
-        return flightsHash;
+        return airportHash;
     }
-}
+
+    static HashMap assignDepartures(HashMap<String, Airport> airportHash) throws IOException {
+        //Opening up files
+        File flightsFile = new File("/Users/mattbraly/Documents/Summer/Airline/src/Records/Departures.csv");
+        BufferedReader brDepartures = new BufferedReader(new FileReader(flightsFile));
+        String line = "";
+        String prevAirport = "";
+        Airport tempAirport = new Airport();
+        while ((line = brDepartures.readLine()) != null) {
+            String[] lineSplit = line.split(",");
+            Flight tempFlight = new Flight(lineSplit[0], lineSplit[1], lineSplit[4], Double.valueOf(lineSplit[2]), lineSplit[3]);
+            if (!lineSplit[0].equals(prevAirport)) {
+                airportHash.put(tempAirport.getName(), tempAirport);
+                tempAirport = airportHash.get(lineSplit[0]);
+                prevAirport = lineSplit[0];
+            }
+            tempAirport.addDepartures(tempFlight);
+        }
+        return airportHash;
+    }
+
+
+};

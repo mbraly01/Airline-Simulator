@@ -3,17 +3,14 @@ import java.util.UUID;
 public class Luggage {
 
     private String id;
-    private String owner_id;
-    private int lug_num;
+    private String ownerId;
     private String name;
     private String color;
     private float weight;
 
-    public Luggage(String owner_id, int lug_num, String name, String color, float weight) {
-        this.owner_id = owner_id;
-        this.lug_num = lug_num;
+    public Luggage(String ownerId, String name, float weight) {
+        this.ownerId = ownerId;
         this.name = name;
-        this.color = color;
         this.weight = weight;
         UUID id = UUID.randomUUID();
     }
@@ -22,20 +19,12 @@ public class Luggage {
         return id;
     }
 
-    public String getOwner_id() {
-        return owner_id;
-    }
-
-    public int getLug_num() {
-        return lug_num;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getColor() {
-        return color;
     }
 
     public float getWeight() {
@@ -46,16 +35,12 @@ public class Luggage {
         this.id = id;
     }
 
-    public void setOwner_id(String owner_id) {
-        this.owner_id = owner_id;
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public void setWeight(float weight) {

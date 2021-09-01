@@ -1,42 +1,41 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
 
 public class Airport {
 
 
-
-    private ArrayList<Flight> flightsIn;
-    private ArrayList<Flight> flightsOut;
+    private ArrayList<Flight> arrivals;
+    private ArrayList<Flight> departures;
     private HashMap<Plane, Integer> planes;
+    private Queue<Passenger> passengers;
     private String name;
 
-
+    public Airport() {}
     public Airport(String name) {
         this.name = name;
     }
 
-    public ArrayList<Flight> getFlightsIn() {
-        return this.flightsIn;
+    public String getName() { return name;}
+
+    public void addArrivals(Flight arrival) {
+        this.arrivals.add(arrival);
     }
 
-    public void setFlightsIn(ArrayList<Flight> flightsIn) {
-        this.flightsIn = flightsIn;
+    public ArrayList<Flight> getArrivals() {
+        return this.arrivals;
     }
 
-    public void addFlightsIn(Flight flightIn) {
-        this.flightsOut.add(flightIn);
+    public void addDepartures(Flight departure) {
+        this.departures.add(departure);
     }
 
-    public ArrayList<Flight> getFlightsOut() {
-        return this.flightsOut;
+    public ArrayList<Flight> getDeparturues() {
+        return this.departures;
     }
 
-    public void setFlightsOut(ArrayList<Flight> flightsOut) {
-        this.flightsOut = flightsOut;
-    }
-
-    public void addFlightsOut(Flight flightOut) {
-        this.flightsOut.add(flightOut);
+    public void setDepartures(ArrayList<Flight> departures) {
+        this.departures = departures;
     }
 
     public HashMap<Plane, Integer> getPlanes() {
@@ -61,6 +60,18 @@ public class Airport {
             return true;
         }
         return false;
+    }
+
+    public Queue<Passenger> getPassengers() {
+        return passengers;
+    }
+
+    public void addPassenger(Passenger pass) {
+        this.passengers.add(pass);
+    }
+
+    public Passenger removePassenger() {
+        return this.passengers.remove();
     }
 
 }

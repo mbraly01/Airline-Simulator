@@ -8,6 +8,8 @@ public class Flight {
     private Plane plane;
 
 
+    public Flight() {}
+
     public Flight( String start, String end, String uuid, double distance, String time)
     {
         this.uuid = uuid;
